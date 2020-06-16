@@ -1,0 +1,50 @@
+#!/bin/sh
+
+usage() {
+    cat <<- EOF
+usage: ./$(basename "${0}") [OPTS] SERVER1 [SERVER2 ...] -- COMMAND
+
+OPTIONS:
+   -o --options SSH_OPTS   add ssh options
+   -q --quiet              only print results
+   -h --help               show this help
+EOF
+    exit "${1}"
+}
+
+quiet=false
+while [ $# != 0 ] ; do
+    case "${1}" in
+        -o|--ssh-opt)   shift; sshopt="$sshopt ${1}";;
+        -h|--help)      usage 0;;
+        -q|--quiet)     quiet=true;;
+        --)             shift; break;;
+        -*)             echo "unknown ${1} option"; exit 1;;
+        *)              hosts="${hosts} ${1}";;
+    esac
+    shift
+done
+[ -z "${h}" ] && usage 1
+
+n=0 t0=$(date +%s)
+for h in ${hosts}; do
+    n=$((n+1))
+    ssh ${sshopt} ${h} -- "${@}" > "/tmp/parassh_${n}_${h}_${t0}" 2>&1 &
+    state="${state} $!;${h};${n}"
+done
+
+while [ "${state}" != '' ]; do
+    for s in ${state}; do
+        pid=$(echo $s | cut -d';' -f1)
+        if ! ps -o pid "${pid}" > /dev/null 2>&1; then
+            h=$(echo $s | cut -d';' -f2)
+            i=$(echo $s | cut -d';' -f3)
+            ! ${quiet} && echo ${h} | grep '.*' --color=auto
+            cat /tmp/parassh_${i}* && rm /tmp/parassh_${i}*
+            state=$(echo "${state}" | sed "s, ${pid};${h};${i},,")
+        fi
+    done
+done
+! ${quiet} && echo
+! ${quiet} && echo "Total: ${n} hosts(s), $(( $(date +%s) - ${t0} )) second(s)"
+
