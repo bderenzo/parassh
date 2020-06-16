@@ -2,7 +2,7 @@
 
 Minimal parallel SSH program written in shell
 
-## Requeriements
+## Requirements
 
 Nothing ;) 
 
