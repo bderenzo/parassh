@@ -18,7 +18,7 @@ server1
 server2
 1592336502.199682719
 
-Total: 3 hosts(s), 1 second(s)
+Total: 3 host(s), 1 second(s)
 ```
 
 ## Help 

@@ -46,5 +46,5 @@ while [ "${state}" != '' ]; do
     done
 done
 ! ${quiet} && echo
-! ${quiet} && echo "Total: ${n} hosts(s), $(( $(date +%s) - ${t0} )) second(s)"
+! ${quiet} && echo "Total: ${n} host(s), $(( $(date +%s) - ${t0} )) second(s)"
 
