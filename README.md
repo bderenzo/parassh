@@ -1,6 +1,10 @@
-# parassh
+# Parassh
 
 Minimal parallel SSH program written in shell
+
+## Requeriements
+
+Nothing ;) 
 
 ## Install
 
