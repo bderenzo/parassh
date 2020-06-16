@@ -44,6 +44,7 @@ while [ "${state}" != '' ]; do
             state=$(echo "${state}" | sed "s, ${pid};${h};${i},,")
         fi
     done
+    sleep 1
 done
 ! ${quiet} && echo
 ! ${quiet} && echo "Total: ${n} host(s), $(( $(date +%s) - ${t0} )) second(s)"
